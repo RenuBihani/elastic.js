@@ -28,7 +28,7 @@ exports.queries = {
     done();
   },
   exists: function (test) {
-    test.expect(40);
+    test.expect(41);
 
     test.ok(ejs.CommonTermsQuery, 'CommonTermsQuery');
     test.ok(ejs.RegexpQuery, 'RegexpQuery');
@@ -72,6 +72,7 @@ exports.queries = {
     test.ok(ejs.DecayScoreFunction, 'DecayScoreFunction');
     test.ok(ejs.RandomScoreFunction, 'RandomScoreFunction');
     test.ok(ejs.ScriptScoreFunction, 'ScriptScoreFunction');
+    test.ok(ejs.WeightScoreFunction, 'WeightScoreFunction');
 
     test.done();
   },
@@ -383,6 +384,40 @@ exports.queries = {
 
     test.throws(function () {
       funcQuery.functions([randomScore, 'invalid']);
+    }, TypeError);
+
+    test.done();
+  },
+  WeightScoreFunction: function (test) {
+    test.expect(7);
+
+    var scoreFunc = ejs.WeightScoreFunction(2),
+      termFilter1 = ejs.TermFilter('tf1', 'fv1'),
+      expected,
+      doTest = function () {
+        test.deepEqual(scoreFunc.toJSON(), expected);
+      };
+
+    expected = {
+      weight: 2
+    };
+
+    test.ok(scoreFunc, 'WeightScoreFunction exists');
+    test.ok(scoreFunc.toJSON(), 'toJSON() works');
+    doTest();
+
+    scoreFunc.weight(3);
+    expected.weight = 3;
+    doTest();
+
+    scoreFunc.filter(termFilter1);
+    expected.filter = termFilter1.toJSON();
+    doTest();
+
+    test.strictEqual(scoreFunc._type(), 'score function');
+
+    test.throws(function () {
+      scoreFunc.filter('invalid');
     }, TypeError);
 
     test.done();
