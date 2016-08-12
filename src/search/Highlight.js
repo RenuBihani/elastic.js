@@ -25,9 +25,10 @@
   ejs.Highlight = function (fields) {
 
     var highlight = {
-      fields: {}
+      fields: {},
+      require_field_match: true 
     },
-
+    
     addOption = function (field, option, val) {
       if (field == null) {
         highlight[option] = val;
@@ -38,7 +39,7 @@
 
         highlight.fields[field][option] = val;
       }
-    };
+    };	 
 
     if (fields != null) {
       if (isString(fields)) {
@@ -289,6 +290,21 @@
         addOption(oField, 'require_field_match', trueFalse);
         return this;
       },
+
+      /**
+            When enabled it will cause everything to be highlighted regardless 
+            if the query matches specifically on them.  You can apply the option to a specific
+            field by passing the field name in to the <code>oField</code>
+            parameter.  Defaults to true.
+  
+            @member ejs.Highlight
+            @param {Boolean} trueFalse If all filtered docs should be highlighted.
+            @returns {Object} returns <code>this</code> so that calls can be chained.
+            */
+      setGlobalRequireFieldMatch: function(trueFalse) {
+          highlight.require_field_match = trueFalse;
+          return this;
+        },
 
       /**
             Sets the max number of characters to scan while looking for the

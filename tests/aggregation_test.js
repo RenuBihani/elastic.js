@@ -1451,7 +1451,7 @@ exports.aggregations = {
     doTest();
 
     agg.highlight(ejs.Highlight(['title', 'content']));
-    expected.myagg.top_hits.highlight =  { fields: { title: {}, content: {} } };
+    expected.myagg.top_hits.highlight =  { fields: { title: {}, content: {} }, require_field_match:true };
     doTest();
 
     agg.scriptField(ejs.ScriptField('f'));

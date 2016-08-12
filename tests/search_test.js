@@ -604,7 +604,8 @@ exports.search = {
       fields: {
         title: {},
         content: {}
-      }
+      },
+      require_field_match: true 
     };
 
     test.ok(highlight, 'Highlight exists');
